@@ -1,7 +1,7 @@
 {
   "name": "Hedgedoc",
   "url": "https://hedgedoc.org/",
-  "version": "1.3.5-dev",
+  "version": "edge",
   "slug": "hedgedoc",
   "arch": ["aarch64", "amd64", "armv7"],
   "description": "Hedgedoc for Home Assistant",
