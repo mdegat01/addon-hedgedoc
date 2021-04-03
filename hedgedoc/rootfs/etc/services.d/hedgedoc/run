@@ -1,0 +1,67 @@
+#!/usr/bin/with-contenv bashio
+# shellcheck shell=bash
+# ==============================================================================
+# Home Assistant Add-on: Hedgedoc
+# Runs Hedgedoc
+# ==============================================================================
+
+declare host
+declare port
+declare username
+declare password
+database=hedgedoc
+
+# Load custom environment variables
+for var in $(bashio::config 'env_vars|keys'); do
+    name=$(bashio::config "env_vars[${var}].name")
+    value=$(bashio::config "env_vars[${var}].value")
+    bashio::log.info "Setting ${name} to ${value}"
+    export "${name}=${value}"
+done
+
+# Set DB URL
+if bashio::config.exists 'remote_mysql_host'; then
+    host=$(bashio::config 'remote_mysql_host')
+    port=$(bashio::config 'remote_mysql_port')
+    username=$(bashio::config 'remote_mysql_username')
+    password=$(bashio::config 'remote_mysql_password')
+    database=$(bashio::config 'remote_mysql_database')
+else
+    host=$(bashio::services 'mysql' 'host')
+    port=$(bashio::services 'mysql' 'port')
+    username=$(bashio::services 'mysql' 'username')
+    password=$(bashio::services 'mysql' 'password')
+fi
+
+export "CMD_DB_URL=mysql://${username}:${password}@${host}:${port}/${database}"
+
+# Set session configs if present
+if bashio::config.exists 'session_secret'; then
+    export "CMD_SESSION_SECRET=$(bashio::config 'session_secret')"
+fi
+if bashio::config.exists 'session_days'; then
+    days="$(bashio::config 'session_days')"
+    export "CMD_SESSION_LIFE=$(( days * 86400000 ))"
+fi
+
+# Set log level
+case "$(bashio::config 'log_level')" in \
+    debug)	    log_level='debug' && export DEBUG=true ;; \
+    error)      log_level='error' ;; \
+    warning)	log_level='warn' ;; \
+    *)		    log_level='info' ;; \
+esac;
+export CMD_LOGLEVEL="${log_level}"
+bashio::log.info "Hedgedoc log level set to ${log_level}"
+
+export CMD_CONFIG_FILE=/etc/hedgedoc/config.json
+export CMD_HOST=127.0.0.1
+export CMD_PORT=8080
+cd /opt/hedgedoc || :
+
+# run database migrations
+s6-setuidgid abc ./node_modules/sequelize-cli/lib/sequelize db:migrate || exit
+
+bashio::log.info 'Handing over control to Hedgedoc...'
+exec s6-setuidgid abc \
+    node app.js
