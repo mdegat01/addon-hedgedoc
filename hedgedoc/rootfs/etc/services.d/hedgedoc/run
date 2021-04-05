@@ -11,7 +11,20 @@ declare username
 declare password
 database=hedgedoc
 
-# Load custom environment variables
+# --- OVERWRITABLE ENVS ---
+# If user sets these in `env_vars` their value wins
+
+# Changing this HedgeDoc default to let users decide if they want this or not
+# If user uses the same URL for multiple apps returning this can break things
+export CMD_HSTS_ENABLE=false
+
+# Changing this default as well because returning this value can cause browsers
+# to add your site to a list that takes months to get off. Users should get to
+# decide if they want this or not
+# See https://hstspreload.org/ for more info
+export CMD_HSTS_PRELOAD=false
+
+# Load user's custom environment variables
 for var in $(bashio::config 'env_vars|keys'); do
     name=$(bashio::config "env_vars[${var}].name")
     value=$(bashio::config "env_vars[${var}].value")
@@ -33,14 +46,29 @@ else
     password=$(bashio::services 'mysql' 'password')
 fi
 
+# --- NON-OVERWRITEABLE ENVS ---
+# If user sets these in `env_vars` our value wins
+
+# Set DB URL
 export "CMD_DB_URL=mysql://${username}:${password}@${host}:${port}/${database}"
 
-# Set session configs if present
-if bashio::config.exists 'session_secret'; then
-    export "CMD_SESSION_SECRET=$(bashio::config 'session_secret')"
+# Set access location info if present
+if bashio::config.true 'access.use_ssl'; then
+    export CMD_PROTOCOL_USESSL=true
 fi
-if bashio::config.exists 'session_days'; then
-    days="$(bashio::config 'session_days')"
+if bashio::config.exists 'access.domain'; then
+    export "CMD_DOMAIN=$(bashio::config 'access.domain')"
+fi
+if bashio::config.true 'access.add_port'; then
+    export CMD_URL_ADDPORT=true
+fi
+
+# Set session configs if present
+if bashio::config.exists 'access.session_secret'; then
+    export "CMD_SESSION_SECRET=$(bashio::config 'access.session_secret')"
+fi
+if bashio::config.exists 'access.session_days'; then
+    days="$(bashio::config 'access.session_days')"
     export "CMD_SESSION_LIFE=$(( days * 86400000 ))"
 fi
 
@@ -54,9 +82,11 @@ esac;
 export CMD_LOGLEVEL="${log_level}"
 bashio::log.info "Hedgedoc log level set to ${log_level}"
 
+export NODE_ENV=production
 export CMD_CONFIG_FILE=/etc/hedgedoc/config.json
-export CMD_HOST=127.0.0.1
-export CMD_PORT=8080
+export "CMD_SOURCE_URL=https://github.com/hedgedoc/hedgedoc/tree/$(printenv HEDGEDOC_VERSION)"
+export CMD_PORT=3000
+
 cd /opt/hedgedoc || :
 
 # run database migrations
