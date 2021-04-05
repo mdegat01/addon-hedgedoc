@@ -15,8 +15,12 @@
   },
   "options": {
     "ssl": false,
-    "session_secret": "changeme",
-    "session_days": 30,
+    "access": {
+      "domain": "homeassistant.local",
+      "add_port": true,
+      "session_secret": null,
+      "session_days": 30
+    },
     "log_level": "info",
     "env_vars": []
   },
@@ -24,8 +28,14 @@
     "ssl": "bool?",
     "certfile": "str?",
     "keyfile": "str?",
-    "session_secret": "password?",
-    "session_days": "int(1,)?",
+    "dhparamfile": "str?",
+    "access": {
+      "domain": "match([^\\/:]+)?",
+      "use_ssl": "bool?",
+      "add_port": "bool?",
+      "session_secret": "password?",
+      "session_days": "int(1,)?"
+    },
     "mysql_host": "str?",
     "mysql_port": "port?",
     "mysql_username": "str?",
