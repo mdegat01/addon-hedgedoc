@@ -123,12 +123,25 @@ if bashio::config.exists 'remote_mysql_host'; then
     bashio::log.info "Using remote database at ${host}:${port}"
 
     # Wait until db is available.
-    for _ in $(seq 1 30); do
+    connected=false
+    for _ in {1..30}; do
         if nc -w1 "${host}" "${port}" > /dev/null 2>&1; then
+            connected=true
             break
         fi
         sleep 1
     done
+
+    if [ $connected = false ]; then
+        bashio::log.fatal
+        bashio::log.fatal "Cannot connect to remote database at ${host}:${port}!"
+        bashio::log.fatal "Exiting after retrying for 30 seconds."
+        bashio::log.fatal
+        bashio::log.fatal "Please ensure the config is set correctly and"
+        bashio::log.fatal "the database is available at the specified host and port."
+        bashio::log.fatal
+        bashio::exit.nok
+    fi
 
 # Use mysql service provided by supervisor
 else
