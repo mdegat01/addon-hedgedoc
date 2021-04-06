@@ -65,12 +65,6 @@ if bashio::config.true 'ssl'; then
         bashio::exit.nok
     fi
 
-    # If ssl is true then use_ssl is automatically true
-    if bashio::config.exists 'access.use_ssl'; then
-        bashio::log.warning "Invalid option: 'access.use_ssl' can only be set when 'ssl' is disabled. Removing..."
-        bashio::addon.option 'access.use_ssl'
-    fi
-
     bashio::log.info 'Setting up SSL...'
     jq \
         --arg cert "/ssl/$(bashio::config 'certfile')" \
