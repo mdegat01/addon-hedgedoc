@@ -86,7 +86,7 @@ SOFTWARE.
 [discord-ha]: https://discord.gg/c5DvZ4e
 [forum-centralcommand]: https://community.home-assistant.io/u/CentralCommand/?u=CentralCommand
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg
-[forum]: https://community.home-assistant.io?u=CentralCommand
+[forum]: https://community.home-assistant.io/t/home-assistant-add-on-hedgedoc/296809?u=CentralCommand
 [hedgedoc]: https://hedgedoc.org/
 [mdegat01]: https://github.com/mdegat01
 [github-actions-shield]: https://github.com/mdegat01/addon-hedgedoc/workflows/CI/badge.svg

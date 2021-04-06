@@ -245,7 +245,7 @@ SOFTWARE.
 [contributors]: https://github.com/mdegat01/addon-loki/graphs/contributors
 [discord-ha]: https://discord.gg/c5DvZ4e
 [forum-centralcommand]: https://community.home-assistant.io/u/CentralCommand/?u=CentralCommand
-[forum]: https://community.home-assistant.io?u=CentralCommand
+[forum]: https://community.home-assistant.io/t/home-assistant-add-on-hedgedoc/296809?u=CentralCommand
 [hedgedoc]: https://hedgedoc.org/
 [hedgedoc-docs]: https://docs.hedgedoc.org/
 [hsts-preload]: https://hstspreload.org/
