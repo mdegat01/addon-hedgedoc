@@ -84,7 +84,6 @@ bashio::log.info "Hedgedoc log level set to ${log_level}"
 
 export NODE_ENV=production
 export CMD_CONFIG_FILE=/etc/hedgedoc/config.json
-export "CMD_SOURCE_URL=https://github.com/hedgedoc/hedgedoc/tree/$(printenv HEDGEDOC_VERSION)"
 export CMD_PORT=3000
 
 cd /opt/hedgedoc || :
