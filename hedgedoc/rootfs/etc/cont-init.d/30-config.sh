@@ -97,13 +97,15 @@ symlinks=( \
 )
 for i in "${symlinks[@]}"; do
     # if config file is present just remove container one and symlink
-    [[ -e "$i" && ! -L "$i" && -e "${data_dir}/$(basename "$i")" ]] && \
+    if [[ -e "$i" && ! -L "$i" && -e "${data_dir}/$(basename "$i")" ]]; then
         rm -Rf "$i" && \
         ln -s "${data_dir}/$(basename "$i")" "$i"
+    fi
     # if config file is not present move it before symlinking
-    [[ -e "$i" && ! -L "$i" ]] && \
+    if [[ -e "$i" && ! -L "$i" ]]; then
         mv "$i" "${data_dir}/$(basename "$i")" && \
         ln -s "${data_dir}/$(basename "$i")" "$i"
+    fi
 done
 
 
