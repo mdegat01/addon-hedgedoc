@@ -18,17 +18,16 @@ database=hedgedoc
 # If user uses the same URL for multiple apps returning this can break things
 export CMD_HSTS_ENABLE=false
 
-# Changing this default as well because returning this value can cause browsers
-# to add your site to a list that takes months to get off. Users should get to
-# decide if they want this or not
-# See https://hstspreload.org/ for more info
-export CMD_HSTS_PRELOAD=false
-
+# --- LOAD ENV_VARS ---
 # Load user's custom environment variables
 for var in $(bashio::config 'env_vars|keys'); do
     name=$(bashio::config "env_vars[${var}].name")
     value=$(bashio::config "env_vars[${var}].value")
-    bashio::log.info "Setting ${name} to ${value}"
+    if [[ ${name} =~ SECRET ]]; then
+        bashio::log.info "Setting ${name} to ******"
+    else
+        bashio::log.info "Setting ${name} to ${value}"
+    fi
     export "${name}=${value}"
 done
 
