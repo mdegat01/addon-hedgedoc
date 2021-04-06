@@ -89,8 +89,9 @@ will not work. Check the [HedgeDoc docs][hedgedoc-docs] for more info.
 
 ### Option: `access.use_ssl`
 
-If users will use SSL to access HedgeDoc. Defaults to value of `ssl`. Ignored if
-`access.domain` is omitted.
+If users will use SSL to access HedgeDoc. If `ssl` is `true` then this option is
+also `true` and cannot be set separately. Otherwise defaults to `false`. Ignored
+if `access.domain` is omitted.
 
 ### Option: `access.add_port`
 
@@ -104,7 +105,7 @@ on the host it won't work properly. Your options here are:_
 - _(Preferred) Don't expose the port, set `access.add_port` to `false` and use
   a reverse proxy (ex. [Nginx Proxy Manager][addon-npm])._
 - _Expose port 3000 as port 3000 on the host, set `access.add_port` to `true`._
-- _Expose port 3000 as port 443 (ssl) or 80 (no-ssl), set `access.add_port` to
+- _Expose port 3000 as port 443 (ssl) or 80 (non-ssl), set `access.add_port` to
   `false`._
 
 ### Option: `access.session_secret`

@@ -15,6 +15,7 @@ data_dir=/data/hedgedoc
 hedgedoc_dir=/opt/hedgedoc
 
 # --- CONFIG SUGGESTIONS/VALIDATIONS ---
+bashio::log.debug 'Validate access config and look for suggestions.'
 bashio::config.suggest 'access.session_secret' 'All sessions will be invalidated each time the add-on restarts.'
 
 bashio::config.suggest 'access.domain' 'A number of HedgeDoc features do not work without it.'
@@ -40,6 +41,7 @@ fi
 
 
 # --- SET UP SSL (if enabled) ---
+bashio::log.debug 'Setting up SSL if required.'
 bashio::config.require.ssl
 if bashio::config.true 'ssl'; then
 
@@ -63,6 +65,12 @@ if bashio::config.true 'ssl'; then
         bashio::exit.nok
     fi
 
+    # If ssl is true then use_ssl is automatically true
+    if bashio::config.exists 'access.use_ssl'; then
+        bashio::log.warning "Invalid option: 'access.use_ssl' can only be set when 'ssl' is disabled. Removing..."
+        bashio::addon.option 'access.use_ssl'
+    fi
+
     bashio::log.info 'Setting up SSL...'
     jq \
         --arg cert "/ssl/$(bashio::config 'certfile')" \
@@ -74,7 +82,33 @@ if bashio::config.true 'ssl'; then
 fi
 
 
+# --- SYMLINKS IN HEDGEDOC DIRECTORY ---
+bashio::log.debug 'Moving files to data volume and symlinking.'
+# Symlink to our config file from hedgedoc dir
+rm -f "${hedgedoc_dir}/config.json" || :
+ln -s /etc/hedgedoc/config.json "${hedgedoc_dir}/config.json"
+
+# Public folders in data volume and symlink
+symlinks=( \
+"${hedgedoc_dir}/public/docs" \
+"${hedgedoc_dir}/public/uploads" \
+"${hedgedoc_dir}/public/views" \
+"${hedgedoc_dir}/public/default.md"
+)
+for i in "${symlinks[@]}"; do
+    # if config file is present just remove container one and symlink
+    [[ -e "$i" && ! -L "$i" && -e "${data_dir}/$(basename "$i")" ]] && \
+        rm -Rf "$i" && \
+        ln -s "${data_dir}/$(basename "$i")" "$i"
+    # if config file is not present move it before symlinking
+    [[ -e "$i" && ! -L "$i" ]] && \
+        mv "$i" "${data_dir}/$(basename "$i")" && \
+        ln -s "${data_dir}/$(basename "$i")" "$i"
+done
+
+
 # --- SET UP DATABASE ---
+bashio::log.debug 'Setting up database.'
 # Use user-provided remote db
 if bashio::config.exists 'remote_mysql_host'; then
     bashio::config.require 'remote_mysql_database' "'remote_mysql_host' is specified"
@@ -129,27 +163,3 @@ fi
 
 # Use our DB settings files
 cp /etc/hedgedoc/sequelizerc "${hedgedoc_dir}/.sequelizerc"
-
-
-# --- SYMLINKS IN HEDGEDOC DIRECTORY ---
-# Symlink to our config file from hedgedoc dir
-rm -f "${hedgedoc_dir}/config.json" || :
-ln -s /etc/hedgedoc/config.json "${hedgedoc_dir}/config.json"
-
-# Public folders in data volume and symlink
-symlinks=( \
-"${hedgedoc_dir}/public/docs" \
-"${hedgedoc_dir}/public/uploads" \
-"${hedgedoc_dir}/public/views" \
-"${hedgedoc_dir}/public/default.md"
-)
-for i in "${symlinks[@]}"; do
-    # if config file is present just remove container one and symlink
-    [[ -e "$i" && ! -L "$i" && -e "${data_dir}/$(basename "$i")" ]] && \
-        rm -Rf "$i" && \
-        ln -s "${data_dir}/$(basename "$i")" "$i"
-    # if config file is not present move it before symlinking
-    [[ -e "$i" && ! -L "$i" ]] && \
-        mv "$i" "${data_dir}/$(basename "$i")" && \
-        ln -s "${data_dir}/$(basename "$i")" "$i"
-done
