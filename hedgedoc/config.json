@@ -3,7 +3,7 @@
   "url": "https://github.com/mdegat01/addon-hedgedoc",
   "version": "edge",
   "slug": "hedgedoc",
-  "arch": ["aarch64", "amd64", "armv7"],
+  "arch": ["aarch64", "amd64", "armv7", "armhf", "i386"],
   "description": "Hedgedoc for Home Assistant",
   "services": ["mysql:want"],
   "map": ["ssl"],
