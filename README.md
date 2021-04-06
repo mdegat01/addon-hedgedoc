@@ -78,7 +78,7 @@ SOFTWARE.
 [add-repo-shield]: https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg
 [add-repo]: https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fmdegat01%2Fhassio-addons
 [amd64-shield]: https://img.shields.io/badge/amd64-yes-green.svg
-[armhf-shield]: https://img.shields.io/badge/armhf-no-red.svg
+[armhf-shield]: https://img.shields.io/badge/armhf-yes-green.svg
 [armv7-shield]: https://img.shields.io/badge/armv7-yes-green.svg
 [commits-shield]: https://img.shields.io/github/commit-activity/y/mdegat01/addon-hedgedoc.svg
 [commits]: https://github.com/mdegat01/addon-hedgedoc/commits/main
@@ -91,7 +91,7 @@ SOFTWARE.
 [mdegat01]: https://github.com/mdegat01
 [github-actions-shield]: https://github.com/mdegat01/addon-hedgedoc/workflows/CI/badge.svg
 [github-actions]: https://github.com/mdegat01/addon-hedgedoc/actions
-[i386-shield]: https://img.shields.io/badge/i386-no-red.svg
+[i386-shield]: https://img.shields.io/badge/i386-yes-green.svg
 [issue]: https://github.com/mdegat01/addon-hedgedoc/issues
 [license-shield]: https://img.shields.io/github/license/mdegat01/addon-hedgedoc.svg
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2021.svg
