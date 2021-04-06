@@ -79,10 +79,13 @@ fi
 
 # Set log level
 case "$(bashio::config 'log_level')" in \
-    debug)	    log_level='debug' && export DEBUG=true ;; \
-    error)      log_level='error' ;; \
-    warning)	log_level='warn' ;; \
-    *)		    log_level='info' ;; \
+    trace)      ;& \
+    debug)      log_level='debug' && export DEBUG=true ;; \
+    notice)     ;& \
+    warning)    log_level='warn' ;; \
+    error)      ;& \
+    fatal)      log_level='error' ;; \
+    *)          log_level='info' ;; \
 esac;
 export CMD_LOGLEVEL="${log_level}"
 bashio::log.info "Hedgedoc log level set to ${log_level}"

@@ -51,6 +51,6 @@
         "value": "str"
       }
     ],
-    "log_level": "list(debug|info|warning|error)?"
+    "log_level": "list(trace|debug|info|notice|warning|error|fatal)?"
   }
 }
