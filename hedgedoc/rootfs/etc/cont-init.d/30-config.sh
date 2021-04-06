@@ -158,9 +158,9 @@ else
     username=$(bashio::services 'mysql' 'username')
     password=$(bashio::services 'mysql' 'password')
 
-    bashio::log.warning "Hedgedoc is using the Maria DB addon's database"
-    bashio::log.warning "Please ensure that addon is included in your backups"
-    bashio::log.warning "Uninstalling the Maria DB addon will also remove Hedgedoc's data"
+    bashio::log.notice "Hedgedoc is using the Maria DB addon's database"
+    bashio::log.notice "Please ensure that addon is included in your backups"
+    bashio::log.notice "Uninstalling the Maria DB addon will also remove Hedgedoc's data"
 
     if bashio::config.true 'reset_database'; then
         bashio::log.warning 'Resetting database...'
