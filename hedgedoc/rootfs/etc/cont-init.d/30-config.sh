@@ -124,7 +124,7 @@ if bashio::config.exists 'remote_mysql_host'; then
 
     # Wait until db is available.
     for _ in $(seq 1 30); do
-        if /bin/nc -w1 "${host}" "${port}" > /dev/null 2>&1; then
+        if nc -w1 "${host}" "${port}" > /dev/null 2>&1; then
             break
         fi
         sleep 1
