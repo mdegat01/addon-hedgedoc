@@ -72,6 +72,12 @@ if bashio::config.exists 'access.session_days'; then
     export "CMD_SESSION_LIFE=$(( days * 86400000 ))"
 fi
 
+# Disable email registration if option is set to false (allowed by default)
+if bashio::config.false 'access.allow_email_registration'; then
+    bashio::log.info "Disabling email registration."
+    export CMD_ALLOW_EMAIL_REGISTER=false
+fi
+
 # Set log level
 case "$(bashio::config 'log_level')" in \
     debug)	    log_level='debug' && export DEBUG=true ;; \

@@ -36,7 +36,8 @@
       "use_ssl": "bool?",
       "add_port": "bool?",
       "session_secret": "password?",
-      "session_days": "int(1,)?"
+      "session_days": "int(1,)?",
+      "allow_email_registration": "bool?"
     },
     "remote_mysql_host": "str?",
     "remote_mysql_port": "port?",
