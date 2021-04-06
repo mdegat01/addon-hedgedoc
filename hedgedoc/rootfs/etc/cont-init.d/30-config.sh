@@ -45,10 +45,20 @@ if bashio::config.true 'ssl'; then
 
     # Separately check for dhparamfile since HedgeDoc has this additional requirement
     bashio::config.require 'dhparamfile' 'SSL is enabled'
-    if ! bashio::fs.file_exists "$(bashio::config 'dhparamfile')"; then
+    if ! bashio::fs.file_exists "/ssl/$(bashio::config 'dhparamfile')"; then
         bashio::log.fatal
-        bashio::log.fatal "The file specified for 'dhparamfile' does not exist!"
-        bashio::log.fatal "Ensure the Diffie-Hellman Key file exists and full path is provided"
+        bashio::log.fatal "SSL has been enabled using the 'ssl' option,"
+        bashio::log.fatal "this requires a Diffie-Hellman key file which is"
+        bashio::log.fatal "configured using the 'dhparamfile' option in the"
+        bashio::log.fatal "add-on configuration."
+        bashio::log.fatal
+        bashio::log.fatal "Unfortunately, the file specified in the"
+        bashio::log.fatal "'dhparamfile' option does not exists."
+        bashio::log.fatal
+        bashio::log.fatal "Please ensure the Diffie-Hellman key file exists and"
+        bashio::log.fatal "is placed in the '/ssl/' directory."
+        bashio::log.fatal
+        bashio::log.fatal "Check the add-on manual for more information."
         bashio::log.fatal
         bashio::exit.nok
     fi
