@@ -19,7 +19,7 @@ bashio::log.debug 'Validate access config and look for suggestions.'
 bashio::config.suggest 'access.session_secret' 'All sessions will be invalidated each time the add-on restarts.'
 
 bashio::config.suggest 'access.domain' 'A number of HedgeDoc features do not work without it.'
-if ! bashio::config.exists 'access.domain'; then
+if bashio::config.is_empty 'access.domain'; then
     if bashio::config.exists 'access.use_ssl'; then
         bashio::log.warning "Invalid option: 'access.use_ssl' set without an 'access.domain'. Removing..."
         bashio::addon.option 'access.use_ssl'
@@ -106,7 +106,7 @@ done
 # --- SET UP DATABASE ---
 bashio::log.debug 'Setting up database.'
 # Use user-provided remote db
-if bashio::config.exists 'remote_mysql_host'; then
+if ! bashio::config.is_empty 'remote_mysql_host'; then
     bashio::config.require 'remote_mysql_database' "'remote_mysql_host' is specified"
     bashio::config.require 'remote_mysql_username' "'remote_mysql_host' is specified"
     bashio::config.require 'remote_mysql_password' "'remote_mysql_host' is specified"

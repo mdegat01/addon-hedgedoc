@@ -32,7 +32,7 @@ for var in $(bashio::config 'env_vars|keys'); do
 done
 
 # Set DB URL
-if bashio::config.exists 'remote_mysql_host'; then
+if ! bashio::config.is_empty 'remote_mysql_host'; then
     host=$(bashio::config 'remote_mysql_host')
     port=$(bashio::config 'remote_mysql_port')
     username=$(bashio::config 'remote_mysql_username')
@@ -55,7 +55,7 @@ export "CMD_DB_URL=mysql://${username}:${password}@${host}:${port}/${database}"
 if bashio::config.true 'access.use_ssl'; then
     export CMD_PROTOCOL_USESSL=true
 fi
-if bashio::config.exists 'access.domain'; then
+if ! bashio::config.is_empty 'access.domain'; then
     export "CMD_DOMAIN=$(bashio::config 'access.domain')"
 fi
 if bashio::config.true 'access.add_port'; then
@@ -63,7 +63,7 @@ if bashio::config.true 'access.add_port'; then
 fi
 
 # Set session configs if present
-if bashio::config.exists 'access.session_secret'; then
+if ! bashio::config.is_empty 'access.session_secret'; then
     export "CMD_SESSION_SECRET=$(bashio::config 'access.session_secret')"
 fi
 if bashio::config.exists 'access.session_days'; then
