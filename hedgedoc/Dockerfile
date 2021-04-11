@@ -24,7 +24,7 @@ RUN set -eux; \
     update-ca-certificates; \
     \
     echo "Add user for HedgeDoc"; \
-    mkdir -p /data/hedgedoc ; \
+    mkdir -p /data/hedgedoc; \
     addgroup -S abc; \
     adduser -u 12345 -h /data/hedgedoc/ -D -S abc -G abc;
 
