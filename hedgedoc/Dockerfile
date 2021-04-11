@@ -18,6 +18,7 @@ RUN set -eux; \
         mariadb-client=10.5.8-r0 \
         nodejs=14.16.1-r0 \
         npm=14.16.1-r0 \
+        openssl=1.1.1k-r0 \
         ; \
     node --version; \
     update-ca-certificates; \

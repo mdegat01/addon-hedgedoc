@@ -5,6 +5,9 @@
 # Runs Hedgedoc
 # ==============================================================================
 
+readonly ENV_LEVEL=production
+readonly CONFIG_FILE=/etc/hedgedoc/config.json
+readonly HTTP_PORT=3000
 declare host
 declare port
 declare username
@@ -90,9 +93,9 @@ esac;
 export CMD_LOGLEVEL="${log_level}"
 bashio::log.info "Hedgedoc log level set to ${log_level}"
 
-export NODE_ENV=production
-export CMD_CONFIG_FILE=/etc/hedgedoc/config.json
-export CMD_PORT=3000
+export "NODE_ENV=${ENV_LEVEL}"
+export "CMD_CONFIG_FILE=${CONFIG_FILE}"
+export "CMD_PORT=${HTTP_PORT}"
 
 cd /opt/hedgedoc || :
 

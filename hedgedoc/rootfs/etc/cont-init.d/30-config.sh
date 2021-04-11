@@ -4,15 +4,17 @@
 # Home Assistant Add-on: Hedgedoc
 # This validates config, creates the database and sets up app files/folders
 # ==============================================================================
+readonly DATABASE=hedgedoc
+readonly CONFIG_DIR=/etc/hedgedoc
+readonly DATA_DIR=/data/hedgedoc
+readonly HEDGEDOC_DIR=/opt/hedgedoc
+readonly DHPARAMS_FILE=/data/dhparams.pem
 declare host
 declare port
 declare username
 declare password
 declare http_port
 declare domain
-database=hedgedoc
-data_dir=/data/hedgedoc
-hedgedoc_dir=/opt/hedgedoc
 
 # --- CONFIG SUGGESTIONS/VALIDATIONS ---
 bashio::log.debug 'Validate access config and look for suggestions.'
@@ -45,60 +47,69 @@ bashio::log.debug 'Setting up SSL if required.'
 bashio::config.require.ssl
 if bashio::config.true 'ssl'; then
 
-    # Separately check for dhparamfile since HedgeDoc has this additional requirement
-    bashio::config.require 'dhparamfile' 'SSL is enabled'
-    if ! bashio::fs.file_exists "/ssl/$(bashio::config 'dhparamfile')"; then
-        bashio::log.fatal
-        bashio::log.fatal "SSL has been enabled using the 'ssl' option,"
-        bashio::log.fatal "this requires a Diffie-Hellman key file which is"
-        bashio::log.fatal "configured using the 'dhparamfile' option in the"
-        bashio::log.fatal "add-on configuration."
-        bashio::log.fatal
-        bashio::log.fatal "Unfortunately, the file specified in the"
-        bashio::log.fatal "'dhparamfile' option does not exists."
-        bashio::log.fatal
-        bashio::log.fatal "Please ensure the Diffie-Hellman key file exists and"
-        bashio::log.fatal "is placed in the '/ssl/' directory."
-        bashio::log.fatal
-        bashio::log.fatal "Check the add-on manual for more information."
-        bashio::log.fatal
-        bashio::exit.nok
+    # dhparam option deprecated 4/21 for release 1.1.0
+    # Wait until at least 5/21 to remove entirely
+    if ! bashio::config.is_empty 'dhparamfile'; then
+        bashio::log.warning "The 'dhparamfile' option is deprecated. Your Diffie-Hellman key"
+        bashio::log.warning "will be copied into the addon's data and the option will be removed"
+        bashio::log.warning "from your configuration. You may then delete the file in /ssl."
+
+        if bashio::fs.file_exists "/ssl/$(bashio::config 'dhparamfile')"; then
+            cp "/ssl/$(bashio::config 'dhparamfile')" "${DHPARAMS_FILE}"
+        else
+            bashio::log.warning "File specified in 'dhparamfile' does not exist!"
+            bashio::log.warning "Generating a Diffie-Hellman key instead."
+        fi
+
+        bashio::addon.option 'dhparamfile'
     fi
+
+    if ! bashio::fs.file_exists "${DHPARAMS_FILE}"; then
+        bashio::log.notice
+        bashio::log.notice "Generating a Diffie-Hellman key to use for SSL."
+        bashio::log.notice "This will take some time but it will only happen once."
+        bashio::log.notice
+
+        openssl dhparam -out "${DHPARAMS_FILE}" 4096 > /dev/null
+    fi
+
+    # permissions
+    chown abc:abc "${DHPARAMS_FILE}"
 
     bashio::log.info 'Setting up SSL...'
     jq \
         --arg cert "/ssl/$(bashio::config 'certfile')" \
         --arg key "/ssl/$(bashio::config 'keyfile')" \
-        --arg dhp "/ssl/$(bashio::config 'dhparamfile')" \
+        --arg dhp "${DHPARAMS_FILE}" \
         '. * {production: (.production * {useSSL:true, sslCertPath:$cert, sslKeyPath:$key, dhParamPath:$dhp})}' \
-        /etc/hedgedoc/config.json > /tmp/config.json \
-    && mv /tmp/config.json /etc/hedgedoc/config.json
+        "${CONFIG_DIR}/config.json" > /tmp/config.json \
+    && mv /tmp/config.json "${CONFIG_DIR}/config.json"
 fi
 
 
 # --- SYMLINKS IN HEDGEDOC DIRECTORY ---
 bashio::log.debug 'Moving files to data volume and symlinking.'
 # Symlink to our config file from hedgedoc dir
-rm -f "${hedgedoc_dir}/config.json" || :
-ln -s /etc/hedgedoc/config.json "${hedgedoc_dir}/config.json"
+rm -f "${HEDGEDOC_DIR}/config.json" || :
+ln -s "${CONFIG_DIR}/config.json" "${HEDGEDOC_DIR}/config.json"
 
 # Public folders in data volume and symlink
 symlinks=( \
-"${hedgedoc_dir}/public/docs" \
-"${hedgedoc_dir}/public/uploads" \
-"${hedgedoc_dir}/public/views" \
-"${hedgedoc_dir}/public/default.md"
+"${HEDGEDOC_DIR}/public/docs" \
+"${HEDGEDOC_DIR}/public/uploads" \
+"${HEDGEDOC_DIR}/public/views" \
+"${HEDGEDOC_DIR}/public/default.md"
 )
 for i in "${symlinks[@]}"; do
     # if config file is present just remove container one and symlink
-    if [[ -e "$i" && ! -L "$i" && -e "${data_dir}/$(basename "$i")" ]]; then
+    if [[ -e "$i" && ! -L "$i" && -e "${DATA_DIR}/$(basename "$i")" ]]; then
         rm -Rf "$i" && \
-        ln -s "${data_dir}/$(basename "$i")" "$i"
+        ln -s "${DATA_DIR}/$(basename "$i")" "$i"
     fi
     # if config file is not present move it before symlinking
     if [[ -e "$i" && ! -L "$i" ]]; then
-        mv "$i" "${data_dir}/$(basename "$i")" && \
-        ln -s "${data_dir}/$(basename "$i")" "$i"
+        mv "$i" "${DATA_DIR}/$(basename "$i")" && \
+        ln -s "${DATA_DIR}/$(basename "$i")" "$i"
     fi
 done
 
@@ -158,7 +169,7 @@ else
 
     if bashio::config.true 'reset_database'; then
         bashio::log.warning 'Resetting database...'
-        echo "DROP DATABASE IF EXISTS \`${database}\`;" \
+        echo "DROP DATABASE IF EXISTS \`${DATABASE}\`;" \
             | mysql -h "${host}" -P "${port}" -u "${username}" -p"${password}"
 
         # Remove `reset_database` option
@@ -166,9 +177,9 @@ else
     fi
 
     # Create database if it doesn't exist
-    echo "CREATE DATABASE IF NOT EXISTS \`${database}\`;" \
+    echo "CREATE DATABASE IF NOT EXISTS \`${DATABASE}\`;" \
         | mysql -h "${host}" -P "${port}" -u "${username}" -p"${password}"
 fi
 
 # Use our DB settings files
-cp /etc/hedgedoc/sequelizerc "${hedgedoc_dir}/.sequelizerc"
+cp "${CONFIG_DIR}/sequelizerc" "${HEDGEDOC_DIR}/.sequelizerc"
