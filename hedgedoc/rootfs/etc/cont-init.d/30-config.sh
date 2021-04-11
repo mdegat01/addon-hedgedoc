@@ -73,6 +73,9 @@ if bashio::config.true 'ssl'; then
         openssl dhparam -out "${DHPARAMS_FILE}" 4096 > /dev/null
     fi
 
+    # permissions
+    chown abc:abc "${DHPARAMS_FILE}"
+
     bashio::log.info 'Setting up SSL...'
     jq \
         --arg cert "/ssl/$(bashio::config 'certfile')" \
