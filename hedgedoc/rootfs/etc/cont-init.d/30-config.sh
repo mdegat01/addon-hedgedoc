@@ -70,7 +70,7 @@ if bashio::config.true 'ssl'; then
         bashio::log.notice "This will take some time but it will only happen once."
         bashio::log.notice
 
-        openssl dhparam -out "${DHPARAMS_FILE}" 4096 > /dev/null
+        openssl dhparam -dsaparam -out "${DHPARAMS_FILE}" 4096 2> /dev/null
     fi
 
     # permissions
