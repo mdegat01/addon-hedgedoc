@@ -134,7 +134,7 @@ jobs:
       - information
       - deploy
     environment:
-      name: ${{ needs.information.outputs.environment }}
+      name: edge
     runs-on: ubuntu-latest
     steps:
       - name: 🚀 Dispatch repository updater update signal
@@ -152,12 +152,14 @@ jobs:
             }
   publish-beta:
     name: 📢 Publish to beta repository
-    if: needs.information.outputs.environment == 'beta'
+    if: |
+      needs.information.outputs.environment == 'beta' ||
+      needs.information.outputs.environment == 'stable'
     needs:
       - information
       - deploy
     environment:
-      name: ${{ needs.information.outputs.environment }}
+      name: beta
     runs-on: ubuntu-latest
     steps:
       - name: 🚀 Dispatch repository updater update signal
@@ -180,7 +182,7 @@ jobs:
       - information
       - deploy
     environment:
-      name: ${{ needs.information.outputs.environment }}
+      name: stable
     runs-on: ubuntu-latest
     steps:
       - name: 🚀 Dispatch repository updater update signal
