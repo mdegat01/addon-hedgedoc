@@ -48,6 +48,7 @@ profile hedgedoc flags=(attach_disconnected,mediate_deleted) {
   /opt/hedgedoc/public/**                   w,
   @{etc_ro}/services                        r,
   @{etc_ro}/my.cnf                          r,
+  @{etc_ro}/my.cnf.d/{,**}                  r,
   /usr/share/mariadb/**                     r,
   /opt/hedgedoc/{,**}                       r,
   /ssl/{,**}                                r,
@@ -95,6 +96,7 @@ profile hedgedoc flags=(attach_disconnected,mediate_deleted) {
     @{etc_ro}/resolv.conf                   r,
     @{etc_ro}/ssl/openssl.cnf               r,
     @{PROC}/*/stat                          r,
+    @{PROC}/loadavg                         r,
     @{sys}/fs/cgroup/memory/memory.limit_in_bytes   r,
     /opt/hedgedoc/node_modules/*/prebuilds/**.node  m,
   }
