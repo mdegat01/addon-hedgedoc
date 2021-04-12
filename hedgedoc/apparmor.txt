@@ -1,0 +1,110 @@
+include <tunables/global>
+
+profile hedgedoc flags=(attach_disconnected,mediate_deleted) {
+  include <abstractions/base>
+
+  # Send signals to children
+  signal (send) set=(kill,term,int,hup,cont),
+
+  # Capabilities
+  capability kill,
+  capability dac_override,
+  capability chown,
+  capability fowner,
+  capability fsetid,
+  capability setuid,
+  capability setgid,
+
+  # S6-Overlay
+  /init                                     rix,
+  /bin/**                                   rix,
+  /usr/bin/**                               rix,
+  @{etc_ro}/s6/**                           rix,
+  @{etc_rw}/services.d/{,**}                rwix,
+  @{etc_rw}/cont-init.d/{,**}               rwix,
+  @{etc_rw}/cont-finish.d/{,**}             rwix,
+  @{etc_rw}/fix-attrs.d/{,**}               rw,
+  @{run}/s6/**                              rwix,
+  @{run}/**                                 rwk,
+  /dev/tty                                  rw,
+  @{etc_ro}/group                           r,
+  @{etc_ro}/passwd                          r,
+  @{etc_ro}/hosts                           r,
+  @{etc_ro}/resolv.conf                     r,
+  @{etc_ro}/ssl/openssl.cnf                 r,
+  /dev/null                                 k,
+
+  # Bashio
+  /usr/lib/bashio/**                        ix,
+  /tmp/**                                   rw,
+
+  # Options.json & addon data
+  /data                                     r,
+  /data/**                                  rw,
+
+  # Files needed for setup
+  @{etc_rw}/hedgedoc/{,**}                  rw,
+  /opt/hedgedoc/{.sequelizerc,config.json}  w,
+  /opt/hedgedoc/public/**                   w,
+  /opt/hedgedoc/{,**}                       r,
+  /ssl/{,**}                                r,
+  link /opt/hedgedoc/config.json -> @{etc_rw}/hedgedoc/config.json,
+  link /opt/hedgedoc/public/** -> /data/hedgedoc/**,
+
+  # Programs
+  /usr/bin/node                             cx,
+  /usr/bin/openssl                          Cx,
+  /usr/bin/mysql                            Cx,
+  /opt/hedgedoc/node_modules/sequelize-cli/lib/sequelize  Cx -> /usr/bin/node,
+
+  # Shell access
+  owner @{HOME}/.*                          rw,
+  @{etc_ro}/inputrc                         r,
+  @{etc_ro}/terminfo/x/xterm-256color       r,
+
+  profile /usr/bin/node flags=(attach_disconnected,mediate_deleted) {
+    include <abstractions/base>
+
+    # Receive signals from S6-Overlay & ourselves
+    signal receive,
+    signal peer=@{profile_name},
+
+    # Send & receive tcp traffic
+    network tcp,
+
+    # Addon data
+    /data/**                                r,
+    /data/hedgedoc/**                       rwk,
+
+    # Config
+    @{etc_ro}/hedgedoc/config.json          r,
+    /opt/hedgedoc/**                        r,
+    /ssl/**                                 r,
+
+    # Executables
+    /opt/hedgedoc/bin/**                    rix,
+    /usr/bin/node                           rix,
+
+    # Runtime usage
+    /tmp/hedgedoc-**                        rw,
+    /bin/busybox                            rm,
+    @{etc_ro}/hosts                         r,
+    @{etc_ro}/resolv.conf                   r,
+    @{etc_ro}/ssl/openssl.cnf               r,
+    @{sys}/fs/cgroup/memory/memory.limit_in_bytes   r,
+    /opt/hedgedoc/node_modules/*/prebuilds/**.node  m,
+  }
+
+  profile /usr/bin/openssl flags=(attach_disconnected,mediate_deleted) {
+    include <abstractions/base>
+
+    /data/dhparams.pem                      w,
+    /usr/bin/openssl                        rm,
+    /etc/ssl/openssl.cnf                    r,
+  }
+
+  profile /usr/bin/mysql flags=(attach_disconnected,mediate_deleted) {
+    include <abstractions/base>
+    include <abstractions/mysql>
+  }
+}

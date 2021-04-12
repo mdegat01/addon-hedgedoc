@@ -12,6 +12,7 @@ declare host
 declare port
 declare username
 declare password
+declare log_level
 database=hedgedoc
 
 # --- OVERWRITABLE ENVS ---
@@ -104,4 +105,4 @@ s6-setuidgid abc ./node_modules/sequelize-cli/lib/sequelize db:migrate || exit
 
 bashio::log.info 'Handing over control to Hedgedoc...'
 exec s6-setuidgid abc \
-    node app.js
+    /usr/bin/node app.js
