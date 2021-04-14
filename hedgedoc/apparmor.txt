@@ -1,5 +1,13 @@
 include <tunables/global>
 
+# Docker overlay
+@{fs_root}=/ /docker/overlay2/*/diff/
+@{do_etc_rw}=@{fs_root}/@{etc_rw}/
+@{do_etc_ro}=@{fs_root}/@{etc_ro}/
+@{do_run}=@{fs_root}/@{run}/
+@{do_usr}=@{fs_root}/usr/
+@{do_var}=@{fs_root}/var/
+
 profile hedgedoc flags=(attach_disconnected,mediate_deleted) {
   include <abstractions/base>
 
@@ -19,19 +27,19 @@ profile hedgedoc flags=(attach_disconnected,mediate_deleted) {
   /init                                     rix,
   /bin/**                                   rix,
   /usr/bin/**                               rix,
-  @{etc_ro}/s6/**                           rix,
-  @{etc_rw}/services.d/{,**}                rwix,
-  @{etc_rw}/cont-init.d/{,**}               rwix,
-  @{etc_rw}/cont-finish.d/{,**}             rwix,
-  @{etc_rw}/fix-attrs.d/{,**}               rw,
-  @{run}/s6/**                              rwix,
-  @{run}/**                                 rwk,
+  @{do_etc_ro}/s6/**                        rix,
+  @{do_etc_rw}/services.d/{,**}             rwix,
+  @{do_etc_rw}/cont-init.d/{,**}            rwix,
+  @{do_etc_rw}/cont-finish.d/{,**}          rwix,
+  @{do_etc_rw}/fix-attrs.d/{,**}            rw,
+  @{do_run}/s6/**                           rwix,
+  @{do_run}/**                              rwk,
   /dev/tty                                  rw,
-  @{etc_ro}/group                           r,
-  @{etc_ro}/passwd                          r,
-  @{etc_ro}/hosts                           r,
-  @{etc_ro}/resolv.conf                     r,
-  @{etc_ro}/ssl/openssl.cnf                 r,
+  @{do_etc_ro}/group                        r,
+  @{do_etc_ro}/passwd                       r,
+  @{do_etc_ro}/hosts                        r,
+  @{do_etc_ro}/resolv.conf                  r,
+  @{do_etc_ro}/ssl/openssl.cnf              r,
   /dev/null                                 k,
 
   # Bashio
@@ -43,16 +51,16 @@ profile hedgedoc flags=(attach_disconnected,mediate_deleted) {
   /data/**                                  rw,
 
   # Files needed for setup
-  @{etc_rw}/hedgedoc/{,**}                  rw,
+  @{do_etc_rw}/hedgedoc/{,**}               rw,
   /opt/hedgedoc/{.sequelizerc,config.json}  w,
   /opt/hedgedoc/public/**                   w,
-  @{etc_ro}/services                        r,
-  @{etc_ro}/my.cnf                          r,
-  @{etc_ro}/my.cnf.d/{,**}                  r,
-  /usr/share/mariadb/**                     r,
+  @{do_etc_ro}/services                     r,
+  @{do_etc_ro}/my.cnf                       r,
+  @{do_etc_ro}/my.cnf.d/{,**}               r,
+  @{do_usr}/share/mariadb/**                r,
   /opt/hedgedoc/{,**}                       r,
   /ssl/{,**}                                r,
-  link /opt/hedgedoc/config.json -> @{etc_rw}/hedgedoc/config.json,
+  link /opt/hedgedoc/config.json -> @{do_etc_rw}/hedgedoc/config.json,
   link /opt/hedgedoc/public/** -> /data/hedgedoc/**,
 
   # Programs
@@ -63,8 +71,8 @@ profile hedgedoc flags=(attach_disconnected,mediate_deleted) {
 
   # Shell access
   owner @{HOME}/.*                          rw,
-  @{etc_ro}/inputrc                         r,
-  @{etc_ro}/terminfo/x/xterm-256color       r,
+  @{do_etc_ro}/inputrc                      r,
+  @{do_etc_ro}/terminfo/x/xterm-256color    r,
 
   profile /usr/bin/node flags=(attach_disconnected,mediate_deleted) {
     include <abstractions/base>
@@ -81,7 +89,7 @@ profile hedgedoc flags=(attach_disconnected,mediate_deleted) {
     /data/hedgedoc/**                       rwk,
 
     # Config
-    @{etc_ro}/hedgedoc/config.json          r,
+    @{do_etc_ro}/hedgedoc/config.json       r,
     /opt/hedgedoc/**                        r,
     /ssl/**                                 r,
 
@@ -92,9 +100,9 @@ profile hedgedoc flags=(attach_disconnected,mediate_deleted) {
     # Runtime usage
     /tmp/hedgedoc-**                        rw,
     /bin/busybox                            rm,
-    @{etc_ro}/hosts                         r,
-    @{etc_ro}/resolv.conf                   r,
-    @{etc_ro}/ssl/openssl.cnf               r,
+    @{do_etc_ro}/hosts                      r,
+    @{do_etc_ro}/resolv.conf                r,
+    @{do_etc_ro}/ssl/openssl.cnf            r,
     @{PROC}/*/stat                          r,
     @{PROC}/loadavg                         r,
     @{sys}/fs/cgroup/memory/memory.limit_in_bytes   r,
@@ -106,7 +114,7 @@ profile hedgedoc flags=(attach_disconnected,mediate_deleted) {
 
     /data/dhparams.pem                      w,
     /usr/bin/openssl                        rm,
-    /etc/ssl/openssl.cnf                    r,
+    @{do_etc_ro}/ssl/openssl.cnf            r,
   }
 
   profile /usr/bin/mysql flags=(attach_disconnected,mediate_deleted) {
