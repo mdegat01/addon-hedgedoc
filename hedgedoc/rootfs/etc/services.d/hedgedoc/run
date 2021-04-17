@@ -107,10 +107,15 @@ cd /opt/hedgedoc || :
 bashio::log.debug "Running database migrations if necessary..."
 s6-setuidgid abc ./node_modules/sequelize-cli/lib/sequelize db:migrate || exit
 
-bashio::log.debug
-bashio::log.debug "Printing all CMD_* env vars overriding config file options"
-bashio::log.debug "$(printenv | grep '^CMD_')"
-bashio::log.debug
+if bashio::var.equals "${log_level}" "debug"; then
+    bashio::log.debug
+    bashio::log.debug "Printing all CMD_* env vars overriding config file options"
+    printenv | grep '^CMD_' | while read -r line ; do
+        bashio::log.debug "${line}"
+    done
+    bashio::log.debug
+fi
+
 bashio::log.info 'Handing over control to Hedgedoc...'
 exec s6-setuidgid abc \
     /usr/bin/node app.js
