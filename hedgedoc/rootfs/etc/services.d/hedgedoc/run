@@ -24,6 +24,7 @@ export CMD_HSTS_ENABLE=false
 
 # --- LOAD ENV_VARS ---
 # Load user's custom environment variables
+bashio::log.debug "Loading 'env_vars'..."
 for var in $(bashio::config 'env_vars|keys'); do
     name=$(bashio::config "env_vars[${var}].name")
     value=$(bashio::config "env_vars[${var}].value")
@@ -36,6 +37,7 @@ for var in $(bashio::config 'env_vars|keys'); do
 done
 
 # Set DB URL
+bashio::log.debug "Setting DB URL..."
 if ! bashio::config.is_empty 'remote_mysql_host'; then
     host=$(bashio::config 'remote_mysql_host')
     port=$(bashio::config 'remote_mysql_port')
@@ -56,6 +58,7 @@ fi
 export "CMD_DB_URL=mysql://${username}:${password}@${host}:${port}/${database}"
 
 # Set access location info if present
+bashio::log.debug "Adding 'access' options to config..."
 if bashio::config.true 'access.use_ssl'; then
     export CMD_PROTOCOL_USESSL=true
 fi
@@ -101,8 +104,13 @@ export "CMD_PORT=${HTTP_PORT}"
 cd /opt/hedgedoc || :
 
 # run database migrations
+bashio::log.debug "Running database migrations if necessary..."
 s6-setuidgid abc ./node_modules/sequelize-cli/lib/sequelize db:migrate || exit
 
+bashio::log.debug
+bashio::log.debug "Printing all CMD_* env vars overriding config file options"
+bashio::log.debug "$(printenv | grep '^CMD_')"
+bashio::log.debug
 bashio::log.info 'Handing over control to Hedgedoc...'
 exec s6-setuidgid abc \
     /usr/bin/node app.js
