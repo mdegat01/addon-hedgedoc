@@ -247,4 +247,3 @@ SOFTWARE.
 [releases]: https://github.com/mdegat01/addon-hedgedoc/releases
 [run]: https://github.com/mdegat01/addon-hedgedoc/blob/main/hedgedoc/rootfs/etc/services.d/hedgedoc/run
 [semver]: http://semver.org/spec/v2.0.0
-[stackexchange-dhparam]: https://security.stackexchange.com/questions/94390/whats-the-purpose-of-dh-parameters/94397#94397
