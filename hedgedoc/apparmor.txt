@@ -62,7 +62,7 @@ profile hedgedoc flags=(attach_disconnected,mediate_deleted) {
   @{do_usr}/share/mariadb/**           r,
   @{do_opt}/hedgedoc/{,**}             r,
   /ssl/{,**}                           r,
-  link /opt/hedgedoc/config.json -> @{etc_rw}/hedgedoc/config.json,
+  link /opt/hedgedoc/config.json -> /etc/hedgedoc/config.json,
   link /opt/hedgedoc/public/** -> /data/hedgedoc/**,
 
   # Programs
