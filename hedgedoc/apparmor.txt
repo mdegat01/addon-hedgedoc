@@ -24,6 +24,10 @@ profile hedgedoc flags=(attach_disconnected,mediate_deleted) {
   capability setuid,
   capability setgid,
 
+  # Network access
+  network tcp,
+  network udp,
+
   # S6-Overlay
   /init                                rix,
   /bin/**                              rix,
@@ -78,8 +82,9 @@ profile hedgedoc flags=(attach_disconnected,mediate_deleted) {
     signal receive,
     signal peer=@{profile_name},
 
-    # Send & receive tcp traffic
+    # Network access
     network tcp,
+    network udp,
 
     # Addon data
     /data/**                           r,
