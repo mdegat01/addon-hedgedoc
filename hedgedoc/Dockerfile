@@ -1,11 +1,11 @@
 # https://github.com/hassio-addons/addon-base/releases
-ARG BUILD_FROM=ghcr.io/hassio-addons/base/amd64:9.1.7
+ARG BUILD_FROM=ghcr.io/hassio-addons/base/amd64
 
 # https://quay.io/repository/hedgedoc/hedgedoc
 FROM quay.io/hedgedoc/hedgedoc:1.7.2-alpine AS build
 
-# hadolint ignore=DL3006
-FROM ${BUILD_FROM}
+# https://github.com/hassio-addons/addon-base/releases
+FROM ${BUILD_FROM}:9.2.0
 # https://github.com/hedgedoc/hedgedoc/releases
 ENV CMD_SOURCE_URL https://github.com/hedgedoc/hedgedoc/tree/1.7.2
 
