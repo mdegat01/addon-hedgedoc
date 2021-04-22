@@ -1,4 +1,3 @@
-# https://github.com/hassio-addons/addon-base/releases
 ARG BUILD_FROM=ghcr.io/hassio-addons/base/amd64
 
 # https://quay.io/repository/hedgedoc/hedgedoc
