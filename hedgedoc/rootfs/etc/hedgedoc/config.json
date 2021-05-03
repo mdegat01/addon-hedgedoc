@@ -1,3 +1,7 @@
 {
-  "production": {}
+  "production": {
+    "csp": {
+      "upgradeInsecureRequests": false
+    }
+  }
 }
