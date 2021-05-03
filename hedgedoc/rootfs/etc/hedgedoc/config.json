@@ -1,3 +1,11 @@
 {
-  "production": {}
+  "production": {
+    "csp": {
+      "enable": true,
+      "directives": {
+        "frameAncestors": "'self'"
+      },
+      "upgradeInsecureRequests": false
+    }
+  }
 }
