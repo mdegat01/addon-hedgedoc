@@ -180,6 +180,3 @@ else
     echo "CREATE DATABASE IF NOT EXISTS \`${DATABASE}\`;" \
         | mysql -h "${host}" -P "${port}" -u "${username}" -p"${password}"
 fi
-
-# Use our DB settings files
-cp "${CONFIG_DIR}/sequelizerc" "${HEDGEDOC_DIR}/.sequelizerc"
