@@ -103,10 +103,6 @@ export "CMD_PORT=${HTTP_PORT}"
 
 cd /opt/hedgedoc || :
 
-# run database migrations
-bashio::log.debug "Running database migrations if necessary..."
-s6-setuidgid abc ./node_modules/sequelize-cli/lib/sequelize db:migrate || exit
-
 if bashio::var.equals "${log_level}" "debug"; then
     bashio::log.debug
     bashio::log.debug "Printing all CMD_* env vars overriding config file options"
