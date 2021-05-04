@@ -105,10 +105,7 @@ ln -s "${CONFIG_DIR}/config.json" "${HEDGEDOC_DIR}/config.json"
 
 # Public folders in data volume and symlink
 symlinks=( \
-"${HEDGEDOC_DIR}/public/docs" \
 "${HEDGEDOC_DIR}/public/uploads" \
-"${HEDGEDOC_DIR}/public/views" \
-"${HEDGEDOC_DIR}/public/default.md"
 )
 for i in "${symlinks[@]}"; do
     # if config file is present just remove container one and symlink
