@@ -84,9 +84,9 @@ fi
 
 # --- CSP OPTIONS ---
 bashio::log.debug 'Setting up CSP options...'
-for var in $(bashio::config 'csp.directives|keys'); do
-    name=$(bashio::config "csp.directives[${var}].name")
-    value=$(bashio::config "csp.directives[${var}].value")
+for var in $(bashio::config 'csp_directives|keys'); do
+    name=$(bashio::config "csp_directives[${var}].name")
+    value=$(bashio::config "csp_directives[${var}].value")
     bashio::log.info "Adding CSP directive ${name} with ${value}"
     jq \
         --arg name "${name}" \

@@ -119,7 +119,7 @@ Enable/disable the ability to sign up with an email. Defaults to `true`. Set to
 `false` if you want to limit who can login to a fixed set of users. Or if you want
 to only allow an [alternate login method][hedgedoc-docs-login].
 
-### Option: `csp.directives`
+### Option: `csp_directives`
 
 Set directives for [helmet][helmet-docs] to use to configure the content security
 policy. HedgeDoc itself also sets a number of defaults here so your directives
