@@ -48,10 +48,9 @@ access:
   add_port: true
   session_secret: changeme
   session_days: 30
-csp:
-  directives:
-    - name: frameAncestors
-      value: "'self'"
+csp_directives:
+  - name: frameAncestors
+    value: "'self'"
 env_vars:
   - name: CMD_HSTS_ENABLE
     value: "true"
