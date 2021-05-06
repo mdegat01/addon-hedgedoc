@@ -42,6 +42,15 @@ bashio::log.debug 'Setting up SSL if required.'
 bashio::config.require.ssl
 if bashio::config.true 'ssl'; then
 
+    # If ssl is true then access.use_ssl must also be true
+    if bashio::config.false 'access.use_ssl'; then
+        bashio::log.warning "If 'ssl' is true then 'access.use_ssl' must also be true."
+        bashio::log.warning "HedgeDoc does not support a configuration where 'ssl' is true"
+        bashio::log.warning "but 'access.use_ssl' is false."
+        bashio::log.warning "Removing 'access.use_ssl' from the configuration..."
+        bashio::addon.option 'access.use_ssl'
+    fi
+
     # dhparam option deprecated 4/21 for release 1.1.0
     # Wait until at least 5/21 to remove entirely
     if ! bashio::config.is_empty 'dhparamfile'; then
