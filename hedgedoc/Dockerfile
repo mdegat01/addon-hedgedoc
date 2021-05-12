@@ -1,12 +1,12 @@
 ARG BUILD_FROM=ghcr.io/hassio-addons/base/amd64
 
 # https://quay.io/repository/hedgedoc/hedgedoc
-FROM quay.io/hedgedoc/hedgedoc:1.8.1-alpine AS build
+FROM quay.io/hedgedoc/hedgedoc:1.8.2-alpine AS build
 
 # https://github.com/hassio-addons/addon-base/releases
 FROM ${BUILD_FROM}:9.2.0
 # https://github.com/hedgedoc/hedgedoc/releases
-ENV CMD_SOURCE_URL https://github.com/hedgedoc/hedgedoc/tree/1.8.1
+ENV CMD_SOURCE_URL https://github.com/hedgedoc/hedgedoc/tree/1.8.2
 
 RUN set -eux; \
     apk update; \
