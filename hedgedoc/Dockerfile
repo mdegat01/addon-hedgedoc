@@ -13,7 +13,7 @@ RUN set -eux; \
     apk add --no-cache \
         ca-certificates=20191127-r5 \
         netcat-openbsd=1.130-r2 \
-        mariadb-client=10.5.11-r0 \
+        mariadb-client=10.5.12-r0 \
         nodejs=14.17.1-r0 \
         npm=7.17.0-r0 \
         openssl=1.1.1k-r0 \
