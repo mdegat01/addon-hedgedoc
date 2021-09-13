@@ -1,7 +1,7 @@
 ARG BUILD_FROM=ghcr.io/hassio-addons/base/amd64
 
 # https://quay.io/repository/hedgedoc/hedgedoc
-FROM quay.io/hedgedoc/hedgedoc:1.8.2-alpine AS build
+FROM quay.io/hedgedoc/hedgedoc:1.9.0-alpine AS build
 
 # https://github.com/hassio-addons/addon-base/releases
 FROM ${BUILD_FROM}:10.0.2
