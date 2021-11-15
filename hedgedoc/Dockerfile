@@ -4,7 +4,7 @@ ARG BUILD_FROM=ghcr.io/hassio-addons/base/amd64
 FROM quay.io/hedgedoc/hedgedoc:1.9.0-alpine AS build
 
 # https://github.com/hassio-addons/addon-base/releases
-FROM ${BUILD_FROM}:10.2.2
+FROM ${BUILD_FROM}:10.2.3
 # https://github.com/hedgedoc/hedgedoc/releases
 ENV CMD_SOURCE_URL https://github.com/hedgedoc/hedgedoc/tree/1.8.2
 
@@ -13,7 +13,7 @@ RUN set -eux; \
     apk add --no-cache \
         ca-certificates=20191127-r5 \
         netcat-openbsd=1.130-r2 \
-        mariadb-client=10.5.12-r0 \
+        mariadb-client=10.5.13-r0 \
         nodejs=14.18.1-r0 \
         npm=7.17.0-r0 \
         openssl=1.1.1l-r0 \
