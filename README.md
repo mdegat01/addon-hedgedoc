@@ -94,7 +94,7 @@ SOFTWARE.
 [i386-shield]: https://img.shields.io/badge/i386-yes-green.svg
 [issue]: https://github.com/mdegat01/addon-hedgedoc/issues
 [license-shield]: https://img.shields.io/github/license/mdegat01/addon-hedgedoc.svg
-[maintenance-shield]: https://img.shields.io/maintenance/yes/2021.svg
+[maintenance-shield]: https://img.shields.io/maintenance/yes/2022.svg
 [project-stage-shield]: https://img.shields.io/badge/project%20stage-production%20ready-brightgreen.svg
 [releases-shield]: https://img.shields.io/github/release/mdegat01/addon-hedgedoc.svg
 [releases]: https://github.com/mdegat01/addon-hedgedoc/releases
