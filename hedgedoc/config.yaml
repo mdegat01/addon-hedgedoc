@@ -10,6 +10,7 @@ arch:
   - armhf
   - i386
 description: HedgeDoc for Home Assistant
+codenotary: codenotary@degatano.com
 services:
   - mysql:want
 map:
