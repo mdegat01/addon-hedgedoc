@@ -11,7 +11,7 @@ ENV CMD_SOURCE_URL https://github.com/hedgedoc/hedgedoc/tree/1.8.2
 RUN set -eux; \
     apk update; \
     apk add --no-cache \
-        ca-certificates=20191127-r7 \
+        ca-certificates=20211220-r0 \
         netcat-openbsd=1.130-r3 \
         mariadb-client=10.6.7-r0 \
         nodejs=16.14.2-r0 \
