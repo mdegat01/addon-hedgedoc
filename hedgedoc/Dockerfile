@@ -28,7 +28,7 @@ RUN set -eux; \
     adduser -u 12345 -h /data/hedgedoc/ -D -S abc -G abc;
 
 COPY --from=build --chown=abc:abc /hedgedoc /opt/hedgedoc
-COPY rootfs /
+COPY --chown=abc:abc rootfs /
 
 WORKDIR /data/hedgedoc
 
