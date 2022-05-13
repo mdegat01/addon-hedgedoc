@@ -7,7 +7,7 @@ FROM quay.io/hedgedoc/hedgedoc:1.9.3-alpine AS build
 # hadolint ignore=DL3006
 FROM ${BUILD_FROM}
 # https://github.com/hedgedoc/hedgedoc/releases
-ENV CMD_SOURCE_URL https://github.com/hedgedoc/hedgedoc/tree/1.8.2
+ENV CMD_SOURCE_URL https://github.com/hedgedoc/hedgedoc/tree/1.9.3
 
 RUN set -eux; \
     apk update; \
@@ -17,7 +17,7 @@ RUN set -eux; \
         mariadb-client=10.6.7-r0 \
         nodejs=16.14.2-r0 \
         npm=8.1.3-r0 \
-        openssl=1.1.1n-r0 \
+        openssl=1.1.1o-r0 \
         ; \
     node --version; \
     update-ca-certificates; \
