@@ -11,6 +11,7 @@ arch:
   - i386
 description: HedgeDoc for Home Assistant
 codenotary: codenotary@degatano.com
+init: false
 services:
   - mysql:want
 map:
