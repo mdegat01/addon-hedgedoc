@@ -19,8 +19,8 @@ RUN set -eux; \
         ca-certificates=20211220-r0 \
         netcat-openbsd=1.130-r3 \
         mariadb-client=10.6.8-r0 \
-        nodejs=16.14.2-r0 \
-        npm=8.1.3-r0 \
+        nodejs=16.15.0-r1 \
+        npm=8.10.0-r0 \
         openssl=1.1.1q-r0 \
         ; \
     node --version; \
