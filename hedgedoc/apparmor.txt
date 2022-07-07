@@ -33,7 +33,7 @@ profile hedgedoc flags=(attach_disconnected,mediate_deleted) {
   /init                                           rix,
   /bin/**                                         rix,
   /usr/bin/**                                     rix,
-  @{do_etc}/s6/**                                 r,
+  @{do_etc}/s6*/**                                r,
   @{do_etc}/cont-{init,finish}.d/{,**}            r,
   @{do_etc}/fix-attrs.d/{,**}                     r,
   @{do_etc}/{s6-rc,services}.d/{,**}              r,
