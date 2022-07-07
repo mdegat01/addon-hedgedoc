@@ -1,17 +1,12 @@
-ARG BUILD_FROM=ghcr.io/hassio-addons/base/amd64
+ARG BUILD_FROM=ghcr.io/hassio-addons/base
 
 # https://github.com/hedgedoc/hedgedoc/releases
-ARG HEDGEDOC_VERSION=1.9.3
-
 # https://quay.io/repository/hedgedoc/hedgedoc
-FROM quay.io/hedgedoc/hedgedoc:${HEDGEDOC_VERSION}-alpine AS build
+FROM quay.io/hedgedoc/hedgedoc:1.9.3-alpine AS build
 
 # https://github.com/hassio-addons/addon-base/releases
 # hadolint ignore=DL3006
 FROM ${BUILD_FROM}
-
-ARG HEDGEDOC_VERSION=1.9.3
-ENV CMD_SOURCE_URL https://github.com/hedgedoc/hedgedoc/tree/${HEDGEDOC_VERSION}
 
 RUN set -eux; \
     apk update; \
@@ -31,7 +26,10 @@ RUN set -eux; \
     addgroup -S abc; \
     adduser -u 12345 -h /data/hedgedoc/ -D -S abc -G abc;
 
+# Set up Hedgedoc 
+ENV CMD_SOURCE_URL="https://github.com/hedgedoc/hedgedoc/tree/1.9.3"
 COPY --from=build --chown=abc:abc /hedgedoc /opt/hedgedoc
+
 COPY --chown=abc:abc rootfs /
 
 WORKDIR /data/hedgedoc
