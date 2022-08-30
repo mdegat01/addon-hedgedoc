@@ -11,7 +11,7 @@ FROM ${BUILD_FROM}
 RUN set -eux; \
     apk update; \
     apk add --no-cache \
-        ca-certificates=20211220-r0 \
+        ca-certificates=20220614-r0 \
         netcat-openbsd=1.130-r3 \
         mariadb-client=10.6.9-r0 \
         nodejs=16.16.0-r0 \
