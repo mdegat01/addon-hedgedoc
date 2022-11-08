@@ -2,7 +2,7 @@ ARG BUILD_FROM=ghcr.io/hassio-addons/base
 
 # https://github.com/hedgedoc/hedgedoc/releases
 # https://quay.io/repository/hedgedoc/hedgedoc
-FROM quay.io/hedgedoc/hedgedoc:1.9.4-alpine AS build
+FROM quay.io/hedgedoc/hedgedoc:1.9.6-alpine AS build
 
 # https://github.com/hassio-addons/addon-base/releases
 # hadolint ignore=DL3006
