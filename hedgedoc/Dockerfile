@@ -13,10 +13,10 @@ RUN set -eux; \
     apk add --no-cache \
         ca-certificates=20220614-r0 \
         netcat-openbsd=1.130-r3 \
-        mariadb-client=10.6.9-r0 \
-        nodejs=16.16.0-r0 \
+        mariadb-client=10.6.10-r0 \
+        nodejs=16.17.1-r0 \
         npm=8.10.0-r0 \
-        openssl=1.1.1q-r0 \
+        openssl=1.1.1s-r0 \
         ; \
     node --version; \
     update-ca-certificates; \
